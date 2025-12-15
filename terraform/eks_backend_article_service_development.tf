@@ -8,7 +8,7 @@ resource "kubernetes_deployment_v1" "deployment_particle41_app_development" {
   }
 
   spec {
-    replicas                  = 2
+    replicas                  = var.replicas
     min_ready_seconds         = 15
     progress_deadline_seconds = 600
 
@@ -46,7 +46,7 @@ resource "kubernetes_deployment_v1" "deployment_particle41_app_development" {
 
         container {
           name              = lower(join("-", [local.org_short_name, "particle41", "app", kubernetes_namespace_v1.namespace_development.metadata[0].name]))
-          image             = "sarveshacharya/particle41:latest"
+          image             = var.app_image
           image_pull_policy = "Always"
 
           resources {
@@ -66,7 +66,7 @@ resource "kubernetes_deployment_v1" "deployment_particle41_app_development" {
           startup_probe {
             http_get {
               path = "/"
-              port = 3002
+              port = var.container_port
             }
 
             failure_threshold = 30
@@ -81,7 +81,7 @@ resource "kubernetes_deployment_v1" "deployment_particle41_app_development" {
 
             http_get {
               path = "/"
-              port = 3002
+              port = var.container_port
             }
           }
 
@@ -94,14 +94,14 @@ resource "kubernetes_deployment_v1" "deployment_particle41_app_development" {
 
             http_get {
               path   = "/"
-              port   = "3002"
+              port   = "var.container_port"
               scheme = "HTTP"
             }
           }
 
           port {
             name           = "http"
-            container_port = 3002
+            container_port = var.container_port
             protocol       = "TCP"
           }
 
@@ -139,8 +139,8 @@ resource "kubernetes_service_v1" "service_particle41_app_development" {
     type = "NodePort"
 
     port {
-      port        = 3002
-      target_port = 3002
+      port        = var.container_port
+      target_port = var.container_port
       protocol    = "TCP"
     }
   }
@@ -156,6 +156,6 @@ resource "kubernetes_config_map_v1" "config_map_particle41_app_development" {
     NODE_ENV  = "production"
     NAMESPACE = kubernetes_namespace_v1.namespace_development.metadata[0].name
 
-    PORT = 3002
+    PORT = var.container_port
   }
 }
