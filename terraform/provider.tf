@@ -7,20 +7,20 @@ data "aws_region" "current" {}
 data "aws_partition" "current" {}
 
 locals {
-  name           = "Particle41"
-  region         = data.aws_region.current.region
-  org_short_name = "p41"
-  environment    = "prod"
+  name           = var.name
+  region         = var.region
+  org_short_name = var.org_short_name
+  environment    = var.environment
 
   # VPC
-  vpc_cidr = "10.0.0.0/16"
-  azs      = slice(data.aws_availability_zones.current.names, 0, 2)
+  vpc_cidr = var.vpc_cidr
+  azs      = slice(data.aws_availability_zones.current.names, 0, var.az_count)
 
-  cluster_version = "1.33"
+  cluster_version = var.cluster_version
 }
 
 provider "aws" {
-  region = "us-east-2"
+  region = var.region
 
   default_tags {
     tags = {
