@@ -22,4 +22,10 @@ terraform {
       version = "3.0.1"
     }
   }
+
+  backend "s3" {
+    bucket = "terraform-p41"
+    key    = "test.tfstate"
+    region = "us-east-2"
+  }
 }

@@ -22,10 +22,6 @@ locals {
 provider "aws" {
   region = "us-east-2"
 
-  shared_config_files      = ["/Users/sarveshacharya/.aws/config"]
-  shared_credentials_files = ["/Users/sarveshacharya/.aws/credentials"]
-  profile                  = "news"
-
   default_tags {
     tags = {
       Application = local.name
