@@ -94,7 +94,7 @@ resource "kubernetes_deployment_v1" "deployment_particle41_app_development" {
 
             http_get {
               path   = "/"
-              port   = "var.container_port"
+              port   = var.container_port
               scheme = "HTTP"
             }
           }
